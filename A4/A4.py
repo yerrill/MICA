@@ -30,16 +30,25 @@ def x(n):
     return result
 
 
+#def dev()
+
+
 iterations = 20
 
 population = []
 sums_pop = [0 for n in hours]
+running_dev_sum = [0 for n in hours]
+
+dangerous_level = 0
 
 for n in range(0, iterations):
     x_cache = {}
     population = [x(i) for i in hours]
+    running_dev_sum = list(map(lambda x, y, z: x + (y - r_exp(z)) ** 2, running_dev_sum, population, hours))
     plt.scatter(hours, population, s=1.0)
     sums_pop = list(map(lambda x, y: x + y, sums_pop, population))
+    if population[-1] > 500:
+        dangerous_level += 1
 
 
 # X bar
@@ -49,6 +58,14 @@ plt.scatter(hours, sample_mean_pop, c='Orange', s=10.0, alpha=0.5)
 # E(x)
 expected = [r_exp(n) for n in hours]
 plt.scatter(hours, expected, c='Blue', s=10.0, alpha=0.5)
+
+# Standard Deviation
+deviation = [round(np.sqrt(i/iterations), 3) for i in running_dev_sum]
+print(deviation)
+
+# Dangerous Level Probability
+dangerous_prob = dangerous_level / iterations
+print(dangerous_prob)
 
 
 plt.xlabel("Hours")
